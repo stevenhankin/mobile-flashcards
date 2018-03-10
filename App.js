@@ -1,23 +1,59 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {StackNavigator} from 'react-navigation'
+import {StyleSheet, Text, View} from 'react-native';
+import DeckList from "./components/DeckList";
+import {createStore} from 'redux'
+import {Provider} from 'react-redux'
+import reducer from './reducers'
+import {receiveDecks} from './actions'
+import configureStore from './store/configureStore'
+
+const store = configureStore();
+
+const MainNavigator = StackNavigator({
+    Home: {screen: DeckList}
+});
 
 export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
-    );
-  }
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    componentDidMount() {
+
+        // TODO : Load from AsyncStorage
+        const decks = {
+            React: {
+                title: 'React',
+                questions: [
+                    {
+                        question: 'What is React?',
+                        answer: 'A library for managing user interfaces'
+                    },
+                    {
+                        question: 'Where do you make Ajax requests in React?',
+                        answer: 'The componentDidMount lifecycle event'
+                    }
+                ]
+            },
+            JavaScript: {
+                title: 'JavaScript',
+                questions: [
+                    {
+                        question: 'What is a closure?',
+                        answer: 'The combination of a function and the lexical environment within which that function was declared.'
+                    }
+                ]
+            }
+        }
+
+        store.dispatch(receiveDecks(decks))
+    }
+
+    render() {
+        return (
+            <Provider store={store}>
+                <View style={{flex: 1}}>
+                    <MainNavigator/>
+                </View>
+            </Provider>
+        )
+    }
+}
