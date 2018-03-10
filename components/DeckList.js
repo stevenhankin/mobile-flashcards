@@ -13,11 +13,16 @@ class DeckList extends React.Component {
     render() {
         const {navigate} = this.props.navigation;
         const {decks} = this.props;
-        const deckArr = Object.keys(decks)
+        const deckKeys = Object.keys(decks)
         return (
             <View style={styles.container}>
-                {deckArr.map((val) => <TouchableOpacity style={styles.button}
-                                                        key={val}><Text>{val}</Text></TouchableOpacity>)}
+                {deckKeys.map((deckName) =>
+                    <TouchableOpacity style={styles.button}
+                                      key={deckName}
+                                      onPress={() => navigate('Deck', {deckName})}>
+                        <Text>{deckName}</Text>
+                        <Text>{decks[deckName].questions.length} cards</Text>
+                    </TouchableOpacity>)}
             </View>
         );
     }

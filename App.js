@@ -2,6 +2,7 @@ import React from 'react';
 import {StackNavigator} from 'react-navigation'
 import {StyleSheet, Text, View} from 'react-native';
 import DeckList from "./components/DeckList";
+import Deck from './components/Deck'
 import {createStore} from 'redux'
 import {Provider} from 'react-redux'
 import reducer from './reducers'
@@ -10,9 +11,14 @@ import configureStore from './store/configureStore'
 
 const store = configureStore();
 
-const MainNavigator = StackNavigator({
-    Home: {screen: DeckList}
-});
+const MainNavigator = StackNavigator(
+    {
+        Home: {screen: DeckList},
+        Deck: {screen: Deck}
+    },
+    {
+        initialRouteName: 'Home',
+    });
 
 export default class App extends React.Component {
 
