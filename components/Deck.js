@@ -10,15 +10,6 @@ class Deck extends React.Component {
             title: `${deckName} Deck`,
         }
     };
-    startQuiz = () => {
-        // TODO
-        console.log('startQuiz')
-    };
-
-    addQuestion = () => {
-        // TODO
-        console.log('addQuestion')
-    };
 
     render() {
         const {navigate} = this.props.navigation;
@@ -27,13 +18,12 @@ class Deck extends React.Component {
         const {deck} = params;
         return (
             <View style={styles.container}>
-                {/*<Text>{deckName}</Text>*/}
-                <Text>{deck.questions.length} cards</Text>
+                <Text>{deck && deck.questions.length} cards</Text>
                 <TouchableOpacity onPress={() => navigate('Quiz', {deckName, deck})} style={styles.button}>
-                    <Text>Start Quiz</Text>
+                    <Text>Start a Quiz</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.addQuestion} style={styles.button}>
-                    <Text>Add Question</Text>
+                <TouchableOpacity onPress={() => navigate('AddCard' , {deckName})} style={styles.button}>
+                    <Text>Create New Question</Text>
                 </TouchableOpacity>
             </View>
         )

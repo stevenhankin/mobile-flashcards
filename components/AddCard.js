@@ -1,35 +1,58 @@
 import React from 'react'
-import {Text, View, TouchableOpacity, StyleSheet} from 'react-native'
+import {Text, View, TextInput, TouchableOpacity, StyleSheet} from 'react-native'
+import {addDeck} from "../actions";
+import {connect} from "react-redux";
 
-export default class AddCard extends React.Component {
+class AddCard extends React.Component {
+
+    constructor() {
+        super();
+        this.state = {
+            question: '',
+            answer: ''
+        }
+    }
+
     static navigationOptions = ({navigation}) => {
-        const {deckName} = navigation.state.params;
-        // debugger
+        // const {deckName} = navigation.state.params;
         return {
             /* Title for this Navigated screen */
-            title: `${deckName} Deck`,
+            title: 'Add Card',
         }
     };
 
-    addQuestion = () => {
+    addCard = () => {
         // TODO
         console.log('addQuestion')
     };
 
     render() {
-        const {navigate} = this.props.navigation;
-        const {params} = this.props.navigation.state;
-        const {deckName} = params;
-        const {deck} = params;
+        // const {navigate} = this.props.navigation;
+        // const {params} = this.props.navigation.state;
+        // const {deckName} = params;
+        // const {deck} = params;
         return (
             <View style={styles.container}>
-                {/*<Text>{deckName}</Text>*/}
-                <Text>{deck.questions.length} cards</Text>
-                <TouchableOpacity onPress={() => navigate('Quiz', {deckName, deck})} style={styles.button}>
-                    <Text>Start Quiz</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={this.addQuestion} style={styles.button}>
-                    <Text>Add Question</Text>
+                <Text>Question</Text>
+                <TextInput
+                    placeholder='Question'
+                    style={styles.input}
+                    onChangeText={(question) => {
+                        this.setState({question})
+                    }}
+                    value={this.state.question}
+                />
+                <Text>Answer</Text>
+                <TextInput
+                    placeholder='Answer'
+                    style={styles.input}
+                    onChangeText={(answer) => {
+                        this.setState({answer})
+                    }}
+                    value={this.state.answer}
+                />
+                <TouchableOpacity onPress={this.addCard} style={styles.button}>
+                    <Text>Add Card</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -49,6 +72,13 @@ const styles = StyleSheet.create({
         margin: 20,
         padding: 10,
         width: 200,
+    },
+    input: {
+        height: 40, width: 200, borderColor: 'gray', borderWidth: 1
     }
 });
 
+
+mapStateToProps = ({decks}) => ({decks});
+
+export default connect(mapStateToProps, {})(AddCard)

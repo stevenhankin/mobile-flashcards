@@ -39,7 +39,7 @@ class NewDeck extends React.Component {
                     value={this.state.text}
                 />
                 <TouchableOpacity style={styles.button} onPress={this.addDeckAndNavigate}>
-                    <Text>Submit</Text>
+                    <Text>Create Deck</Text>
                 </TouchableOpacity>
             </View>
         )

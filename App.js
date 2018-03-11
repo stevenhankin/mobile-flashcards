@@ -1,17 +1,16 @@
 import React from 'react';
 import {StackNavigator, TabNavigator} from 'react-navigation'
-import {StyleSheet, Text, View} from 'react-native';
+import {View} from 'react-native';
 import DeckList from "./components/DeckList";
 import Deck from './components/Deck'
 import Quiz from './components/Quiz'
-// import {createStore} from 'redux'
+import NewDeck from "./components/NewDeck";
+import AddCard from "./components/AddCard";
 import {Provider} from 'react-redux'
-// import reducer from './reducers'
 import {receiveDecks} from './actions'
 import configureStore from './store/configureStore'
-import NewDeck from "./components/NewDeck";
 
-
+// Create a new Redux store
 const store = configureStore();
 
 
@@ -19,6 +18,7 @@ const DeckUseStack = StackNavigator(
     {
         DeckList: {screen: DeckList},
         Deck: {screen: Deck},
+        AddCard: {screen: AddCard},
         Quiz: {screen: Quiz},
     },
     {
@@ -27,8 +27,7 @@ const DeckUseStack = StackNavigator(
 
 const DeckAmendStack = StackNavigator(
     {
-        NewDeck: {screen: NewDeck},
-        AddCard: {screen: Deck},
+        NewDeck: {screen: NewDeck}
 
     },
     {
@@ -46,14 +45,14 @@ const TabNav = TabNavigator(
         DeckAmend: {
             screen: DeckAmendStack,
             navigationOptions: {
-                tabBarLabel: 'Edit'
+                tabBarLabel: 'New Deck'
             }
         },
     },
     {
         initialRouteName: 'DeckUse',
     }
-)
+);
 
 class App extends React.Component {
 
@@ -83,7 +82,7 @@ class App extends React.Component {
                     }
                 ]
             }
-        }
+        };
 
         store.dispatch(receiveDecks(decks))
     }
