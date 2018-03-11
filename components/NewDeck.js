@@ -1,39 +1,38 @@
 import React from 'react'
-import {Text, View, TouchableOpacity, StyleSheet} from 'react-native'
+import { Text, TextInput, View, TouchableOpacity, StyleSheet} from 'react-native'
 
 class NewDeck extends React.Component {
+
+    constructor() {
+        super()
+        this.state = {
+            text: ''
+        }
+    }
+
     static navigationOptions = ({navigation}) => {
-        const {deckName} = navigation.state.params;
-        // debugger
         return {
             /* Title for this Navigated screen */
             title: `New Deck`,
         }
     };
-    startQuiz = () => {
-        // TODO
-        console.log('startQuiz')
-    };
-
-    addQuestion = () => {
-        // TODO
-        console.log('addQuestion')
-    };
 
     render() {
         const {navigate} = this.props.navigation;
         const {params} = this.props.navigation.state;
-        const {deckName} = params;
-        const {deck} = params;
         return (
             <View style={styles.container}>
-                {/*<Text>{deckName}</Text>*/}
-                <Text>{deck.questions.length} cards</Text>
-                <TouchableOpacity onPress={() => navigate('Quiz', {deckName, deck})} style={styles.button}>
-                    <Text>Start Quiz</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={this.addQuestion} style={styles.button}>
-                    <Text>Add Question</Text>
+                <Text>What is the title of your new deck?</Text>
+                <TextInput
+                    placeholder='Deck Title'
+                    style={{height: 40, width: 200,borderColor: 'gray', borderWidth: 1}}
+                    onChangeText={(text) => {
+                        this.setState({text})
+                    }}
+                    value={this.state.text}
+                />
+                <TouchableOpacity style={styles.button}>
+                    <Text>Submit</Text>
                 </TouchableOpacity>
             </View>
         )

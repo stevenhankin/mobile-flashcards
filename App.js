@@ -9,6 +9,7 @@ import {Provider} from 'react-redux'
 // import reducer from './reducers'
 import {receiveDecks} from './actions'
 import configureStore from './store/configureStore'
+import NewDeck from "./components/NewDeck";
 
 
 const store = configureStore();
@@ -26,7 +27,7 @@ const DeckUseStack = StackNavigator(
 
 const DeckAmendStack = StackNavigator(
     {
-        NewDeck: {screen: DeckList},
+        NewDeck: {screen: NewDeck},
         AddCard: {screen: Deck},
 
     },
