@@ -6,7 +6,7 @@ import {receiveDecks} from '../actions'
 class DeckList extends React.Component {
     static navigationOptions = {
         /* Title for this Navigated screen */
-        title: 'Deck List',
+        title: 'Decks',
     };
 
 
@@ -19,7 +19,7 @@ class DeckList extends React.Component {
                 {deckKeys.map((deckName) =>
                     <TouchableOpacity style={styles.button}
                                       key={deckName}
-                                      onPress={() => navigate('Deck', {deckName})}>
+                                      onPress={() => navigate('Deck', {deckName, deck:decks[deckName]})}>
                         <Text>{deckName}</Text>
                         <Text>{decks[deckName].questions.length} cards</Text>
                     </TouchableOpacity>)}
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
         width: 200,
     }
 });
+
 
 mapStateToProps = (decks) => {
     return {decks}

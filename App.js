@@ -1,26 +1,60 @@
 import React from 'react';
-import {StackNavigator} from 'react-navigation'
+import {StackNavigator, TabNavigator} from 'react-navigation'
 import {StyleSheet, Text, View} from 'react-native';
 import DeckList from "./components/DeckList";
 import Deck from './components/Deck'
-import {createStore} from 'redux'
+import Quiz from './components/Quiz'
+// import {createStore} from 'redux'
 import {Provider} from 'react-redux'
-import reducer from './reducers'
+// import reducer from './reducers'
 import {receiveDecks} from './actions'
 import configureStore from './store/configureStore'
 
+
 const store = configureStore();
 
-const MainNavigator = StackNavigator(
+
+const DeckUseStack = StackNavigator(
     {
-        Home: {screen: DeckList},
-        Deck: {screen: Deck}
+        DeckList: {screen: DeckList},
+        Deck: {screen: Deck},
+        Quiz: {screen: Quiz},
     },
     {
-        initialRouteName: 'Home',
+        initialRouteName: 'DeckList',
     });
 
-export default class App extends React.Component {
+const DeckAmendStack = StackNavigator(
+    {
+        NewDeck: {screen: DeckList},
+        AddCard: {screen: Deck},
+
+    },
+    {
+        initialRouteName: 'NewDeck',
+    });
+
+const TabNav = TabNavigator(
+    {
+        DeckUse: {
+            screen: DeckUseStack,
+            navigationOptions: {
+                tabBarLabel: 'Decks'
+            }
+        },
+        DeckAmend: {
+            screen: DeckAmendStack,
+            navigationOptions: {
+                tabBarLabel: 'Edit'
+            }
+        },
+    },
+    {
+        initialRouteName: 'DeckUse',
+    }
+)
+
+class App extends React.Component {
 
     componentDidMount() {
 
@@ -57,9 +91,11 @@ export default class App extends React.Component {
         return (
             <Provider store={store}>
                 <View style={{flex: 1}}>
-                    <MainNavigator/>
+                    <TabNav/>
                 </View>
             </Provider>
         )
     }
 }
+
+export default App;
