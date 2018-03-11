@@ -13,13 +13,13 @@ class DeckList extends React.Component {
     render() {
         const {navigate} = this.props.navigation;
         const {decks} = this.props;
-        const deckKeys = Object.keys(decks)
+        const deckKeys = (decks && Object.keys(decks)) || []
         return (
             <View style={styles.container}>
                 {deckKeys.map((deckName) =>
                     <TouchableOpacity style={styles.button}
                                       key={deckName}
-                                      onPress={() => navigate('Deck', {deckName, deck:decks[deckName]})}>
+                                      onPress={() => navigate('Deck', {deckName, deck: decks[deckName]})}>
                         <Text>{deckName}</Text>
                         <Text>{decks[deckName].questions.length} cards</Text>
                     </TouchableOpacity>)}
@@ -45,8 +45,6 @@ const styles = StyleSheet.create({
 });
 
 
-mapStateToProps = (decks) => {
-    return {decks}
-};
+mapStateToProps = ({decks}) => ({decks});
 
 export default connect(mapStateToProps, {receiveDecks})(DeckList)
