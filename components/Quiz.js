@@ -10,8 +10,8 @@ class Quiz extends React.Component {
         }
     };
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             questionIdx: 0,
             correct: 0,

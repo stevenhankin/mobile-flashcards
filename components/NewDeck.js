@@ -5,8 +5,8 @@ import {addDeck} from "../actions";
 
 class NewDeck extends React.Component {
 
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             text: ''
         }
