@@ -1,9 +1,14 @@
+import {AsyncStorage} from 'react-native'
 
 /**
  * return all of the decks along with their titles, questions, and answers
  */
 getDecks = () => {
-    //TODO
+    return AsyncStorage.getItem('@Udacicards:decks').then(
+        (result) => {
+            //TODO
+        }
+    )
 }
 
 /**

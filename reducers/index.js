@@ -3,6 +3,10 @@ import {RECEIVE_DECKS, ADD_DECK, ADD_CARD} from '../actions'
 function decks(state = {}, action) {
     switch (action.type) {
         case ADD_DECK:
+            if (state.decks.hasOwnProperty(action.deckName)) {
+                console.log('Deck already exists! will not add..')
+                return state;
+            }
             const x = {
                 ...state,
                 decks: {...state.decks},
