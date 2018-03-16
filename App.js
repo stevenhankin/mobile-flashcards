@@ -8,7 +8,7 @@ import NewDeck from "./components/NewDeck";
 import AddCard from "./components/AddCard";
 import {Provider} from 'react-redux'
 import {receiveDecks} from './actions'
-import configureStore from './store/configureStore'
+import configureStore from './store/index'
 
 // Create a new Redux store
 const store = configureStore();

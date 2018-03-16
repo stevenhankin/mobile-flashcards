@@ -1,7 +1,8 @@
 import React from 'react'
 import {Text, View, TextInput, TouchableOpacity, StyleSheet} from 'react-native'
-import {addCard} from "../actions";
+// import {addCard} from "../actions";
 import {connect} from "react-redux";
+import {addCardToDeck} from '../actions'
 
 class AddCard extends React.Component {
 
@@ -10,7 +11,7 @@ class AddCard extends React.Component {
         this.state = {
             question: '',
             answer: '',
-            deckName: props.navigation.state.params.deckName,
+            deckName: props.navigation.state.params.selectedDeck,
         }
     }
 
@@ -28,7 +29,14 @@ class AddCard extends React.Component {
      * and the new question and new answer
      */
     createCard = () => {
-        this.props.addCard(this.state.deckName, this.state.question, this.state.answer)
+        const navState=JSON.stringify(this.props.navigation.state);
+        console.log(`prps state: ${navState}, deckName: ${this.state.deckName}, question: ${this.state.question}, answer: ${this.state.answer}`);
+        const card = {question: this.state.question, answer: this.state.answer};
+        console.log(`addCardToDeck(${this.state.deckName}, ${card})`);
+        this.props.addCardToDeck(this.state.deckName, card)
+        // addCardToDeck(this.state.deckName, card)
+        //     .then(() => this.props.addCard(this.state.deckName, this.state.question, this.state.answer)
+        //         , (err) => console.log(`failed to add card: ${err}`))
     };
 
     render() {
@@ -41,8 +49,7 @@ class AddCard extends React.Component {
                     onChangeText={(question) => {
                         this.setState({question})
                     }}
-                    value={this.state.question}
-                />
+                    value={this.state.question}/>
                 <Text>Answer</Text>
                 <TextInput
                     placeholder='Answer'
@@ -50,8 +57,7 @@ class AddCard extends React.Component {
                     onChangeText={(answer) => {
                         this.setState({answer})
                     }}
-                    value={this.state.answer}
-                />
+                    value={this.state.answer}/>
                 <TouchableOpacity
                     onPress={this.createCard}
                     style={styles.button}>
@@ -82,6 +88,6 @@ const styles = StyleSheet.create({
 });
 
 
-mapStateToProps = ({decks}) => ({decks});
+// mapStateToProps = ({decks}) => ({decks});
 
-export default connect(mapStateToProps, {addCard})(AddCard)
+export default connect(null, {addCardToDeck})(AddCard)

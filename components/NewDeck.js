@@ -2,11 +2,11 @@ import React from 'react'
 import {Text, TextInput, View, TouchableOpacity, StyleSheet} from 'react-native'
 import {connect} from "react-redux";
 import {addDeck} from "../actions";
+// import {addDeck} from '../services'
 
 class NewDeck extends React.Component {
-
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             text: ''
         }
@@ -20,8 +20,12 @@ class NewDeck extends React.Component {
     };
 
     addDeckAndNavigate = () => {
-        const deckName = this.state.text;
-        this.props.addDeck(deckName)
+        const deckName=this.state.text;
+        console.log('add deck',deckName);
+        this.props.addDeck(deckName);
+        // addDeck(deckName)
+        //     .then(this.props.addDeck(deckName)
+        //     )
     };
 
     render() {
@@ -63,6 +67,6 @@ const styles = StyleSheet.create({
 });
 
 
-mapStateToProps = ({decks}) => ({decks});
+// mapStateToProps = ({decks}) => ({decks});
 
-export default connect(mapStateToProps, {addDeck})(NewDeck)
+export default connect(null, {addDeck})(NewDeck)

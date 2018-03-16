@@ -103,7 +103,7 @@ class DeckList extends React.Component {
      */
     displayEachDeck(deckKeys, decks) {
         return deckKeys.map((deckName) => {
-            const numCards = decks[deckName].questions.length;
+            const numCards = decks[deckName] ? decks[deckName].questions.length : 0;
             return (
                 <Animated.View key={deckName} style={{opacity: this.state.faders[deckName].faderAnim}}>
                     <TouchableOpacity style={styles.button}

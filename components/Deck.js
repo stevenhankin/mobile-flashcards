@@ -8,15 +8,15 @@ class Deck extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            deckName: props.navigation.state.params.deckName
+            deckName: props.navigation.state.params.selectedDeck
         }
     }
 
     static navigationOptions = ({navigation}) => {
-        const {deckName} = navigation.state.params;
+        const {selectedDeck} = navigation.state.params;
         return {
             /* Title for this Navigated screen */
-            title: `${deckName} Deck`,
+            title: `${selectedDeck} Deck`,
         }
     };
 
