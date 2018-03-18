@@ -39,7 +39,17 @@ instructions from Expo
 
 ## Project Layout
 
-### Redux structure
+### File structure
+```
+    App.js              (application root)
+        /actions        (redux actions)
+        /components     (views)
+        /reducers       (redux reducer)
+        /storage        (device local storage api)
+        /utils          (navigation, notifications and styles)
+```
+
+### State structure
 ```
 {
     decks: {
@@ -47,7 +57,7 @@ instructions from Expo
             <id1> : {
                 deckTitle: <title>
                 numCards: <#cards>
-                cards: {
+                cards: [
                     <card1>: {
                         question: <question>
                         answer: <answer>
@@ -56,9 +66,10 @@ instructions from Expo
                         question: <question>
                         answer: <answer>
                     }
-                }
+                ]
             }
         }
+        allIds: [<deckId1>,<deckId2>,..]
     }
 }
 ```
