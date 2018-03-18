@@ -5,19 +5,26 @@ import {receiveDecks} from '../actions'
 
 class DeckList extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            faders: {}
+        }
+    }
+
     static navigationOptions = {
         /* Title for this Navigated screen */
         title: 'Decks',
     };
 
     /**
-     * Once props arrive from Redux, we can
-     * setup the faders for the animation
+     * Once props arrive from Redux, we can setup the faders for the animation.
+     * New Props are received when a new deck is created and hence need a new fader.
      *
      * @param newProps
      */
     componentWillReceiveProps(newProps) {
-        this.setupFaders(newProps)
+        newProps.decks && this.setupFaders(newProps)
     }
 
     /**
@@ -28,10 +35,10 @@ class DeckList extends React.Component {
      * @param props
      */
     setupFaders = (props) => {
-        const faders = Object.keys(props.decks)
+        const faders = Object.getOwnPropertyNames(props.decks)
             .reduce((acc, val) => {
                 const deckObj = {};
-                deckObj[val] = {faderAnim: new Animated.Value(1)};
+                deckObj[val] = {opacityAnim: new Animated.Value(1)};
                 return Object.assign({}, acc, deckObj)
             }, {});
         this.setState({faders})
@@ -39,8 +46,10 @@ class DeckList extends React.Component {
 
 
     render() {
-        const {decks} = this.props;
-        const deckKeys = (decks && Object.keys(decks)) || [];
+        const decks = this.props.decks ||{};
+        console.log('decks',decks)
+        const deckKeys = Object.getOwnPropertyNames(decks);
+        console.log('deckKeys',deckKeys)
         return (
             <View style={styles.container}>
                 {this.displayEachDeck(deckKeys, decks)}
@@ -70,24 +79,23 @@ class DeckList extends React.Component {
                     navigate('Deck', {selectedDeck, deck: decks[selectedDeck]})
                     : navigate('AddCard', {selectedDeck}),
             800);
-        Object.keys(this.state.faders)
+        Object.getOwnPropertyNames(this.state.faders)
             .filter(faderName => faderName !== selectedDeck) // Only want to fade-out the unselected decks
             .map(
                 (deckName) => {
                     const deckFader = this.state.faders[deckName];
-                    console.log(deckFader)
-                    Animated.timing(                  // Animate over time
-                        deckFader.faderAnim,
+                    Animated.timing(                  // Animate
+                        deckFader.opacityAnim,
                         {
-                            toValue: 0,                  // Animate to opaque
-                            duration: 1000,
+                            toValue: 0,                  // Transition to opaque..
+                            duration: 1000,              // ..during 1 second
                         }
                     ).start(
                         () => {
                             /*
                             After a short delay...make the faded deck visible again
                              */
-                            setTimeout(() => this.state.faders[deckName].faderAnim.setValue(1), 500)
+                            setTimeout(() => this.state.faders[deckName].opacityAnim.setValue(1), 500)
                         }
                     );
                 }
@@ -102,18 +110,33 @@ class DeckList extends React.Component {
      * @returns {Object|*|{}|Uint8Array|any[]|Int32Array}
      */
     displayEachDeck(deckKeys, decks) {
+        console.log('deckKeys',JSON.stringify(deckKeys))
         return deckKeys.map((deckName) => {
-            const numCards = decks[deckName] ? decks[deckName].questions.length : 0;
+            console.log('deckName',deckName)
+            console.log('decks',JSON.stringify(decks))
+            const deck = decks[deckName];
+            const numCards = deck.questions && deck.questions.length;
             return (
-                <Animated.View key={deckName} style={{opacity: this.state.faders[deckName].faderAnim}}>
+                <Animated.View key={deckName} style={{opacity: this.getOpacityAnim(deckName)}}>
                     <TouchableOpacity style={styles.button}
-
                                       onPress={() => this.fadeDecksAndNavigate(deckName, numCards)
                                       }>
                         <Text>{deckName}</Text>
                         <Text>{numCards} cards</Text>
                     </TouchableOpacity></Animated.View>)
         });
+    }
+
+    /**
+     * Return the animated opacity if available
+     * otherwise default to 1 (visible)
+     *
+     * @param deckName
+     * @returns {Animated.Value|number}
+     */
+    getOpacityAnim(deckName) {
+        const fader = this.state.faders[deckName];
+        return (fader && fader.opacityAnim) || 1;
     }
 }
 

@@ -1,4 +1,4 @@
-import {AsyncStorage} from 'react-native'
+import {AsyncStorage,localStorage} from 'react-native'
 
 const key = '@Udacicards:decks';
 
@@ -7,9 +7,19 @@ const key = '@Udacicards:decks';
  *
  * @returns {*|Promise}
  */
-getDecks = () => {
-    return AsyncStorage.getItem(key)
-};
+export function getDecks() {
+    return new Promise(
+        (resolve,reject) => {
+            AsyncStorage.getItem(key)
+                .then((decks) => {
+                    console.log('got decks!',decks)
+                    return resolve(decks)
+                }, (err) => {
+                    console.log('oops', err)
+                    return reject(err)
+                })
+        })
+}
 
 
 /**
@@ -20,7 +30,7 @@ getDecks = () => {
  * @param id
  * @returns {Promise<any>}
  */
-export function getDeck(id) {
+function getDeck(id) {
     return new Promise(
         (resolve, reject) => {
             AsyncStorage.getItem(key).then(
@@ -46,7 +56,7 @@ export function getDeck(id) {
  */
 export function addDeck(deckName) {
     return new Promise((resolve, reject) => {
-            console.log('services addDeck', deckName)
+            console.log('services addDeck', deckName);
             AsyncStorage.getItem(key).then( // Get whole deck
                 (value) => {
                     let data = JSON.parse(value) || {};
@@ -87,13 +97,12 @@ export function addDeck(deckName) {
  * @param card
  */
 export function addCardToDeck(deckName, card) {
-    console.log('**HERE!!!!')
     return new Promise((resolve, reject) => {
-        console.log('services addCardToDeck')
+            console.log('services addCardToDeck');
             AsyncStorage.getItem(key).then( // Get whole deck first
                 (value) => {
                     let data = JSON.parse(value) || {};
-                    console.log(`Looking for ${deckName} in`, data)
+                    // console.log(`Looking for ${deckName} in`, data)
                     if (!data[deckName]) { //  Verify deck exists
                         return reject(`Deck ${deckName} does not exit; create first`)
                     }

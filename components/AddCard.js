@@ -1,6 +1,5 @@
 import React from 'react'
 import {Text, View, TextInput, TouchableOpacity, StyleSheet} from 'react-native'
-// import {addCard} from "../actions";
 import {connect} from "react-redux";
 import {addCardToDeck} from '../actions'
 
@@ -16,28 +15,14 @@ class AddCard extends React.Component {
     }
 
     static navigationOptions = ({navigation}) => {
-        // const {deckName} = navigation.state.params;
+        console.log('params',JSON.stringify(navigation.state.params))
+        const {selectedDeck} = navigation.state.params;
         return {
             /* Title for this Navigated screen */
-            title: 'Add Card',
+            title: `Add Card to ${selectedDeck}`,
         }
     };
 
-    /**
-     * Dispatch an Add Card action
-     * using the passed in deck name
-     * and the new question and new answer
-     */
-    createCard = () => {
-        const navState=JSON.stringify(this.props.navigation.state);
-        console.log(`prps state: ${navState}, deckName: ${this.state.deckName}, question: ${this.state.question}, answer: ${this.state.answer}`);
-        const card = {question: this.state.question, answer: this.state.answer};
-        console.log(`addCardToDeck(${this.state.deckName}, ${card})`);
-        this.props.addCardToDeck(this.state.deckName, card)
-        // addCardToDeck(this.state.deckName, card)
-        //     .then(() => this.props.addCard(this.state.deckName, this.state.question, this.state.answer)
-        //         , (err) => console.log(`failed to add card: ${err}`))
-    };
 
     render() {
         return (
@@ -59,7 +44,7 @@ class AddCard extends React.Component {
                     }}
                     value={this.state.answer}/>
                 <TouchableOpacity
-                    onPress={this.createCard}
+                    onPress={()=>this.props.addCardToDeck(this.state.deckName, {question: this.state.question, answer: this.state.answer})}
                     style={styles.button}>
                     <Text>Add Card</Text>
                 </TouchableOpacity>

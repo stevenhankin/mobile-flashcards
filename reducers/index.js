@@ -1,56 +1,46 @@
-import {RECEIVE_DECKS, RECEIVE_DECK} from '../actions'
+import {RECEIVE_DECKS, RECEIVE_DECK, SERVICE_ERROR} from '../actions'
 
-function decks(state = {}, action) {
-    let decks = {}
+const byId = (state = {}, action) => {
+    let decks = {};
     switch (action.type) {
-        // case ADD_DECK:
-        //     if (state.decks.hasOwnProperty(action.deckName)) {
-        //         console.log('Deck already exists! will not add..')
-        //         return state;
-        //     }
-        //     const x = {
-        //         ...state,
-        //         decks: {...state.decks},
-        //     };
-        //     x.decks[action.deckName] = {title: action.deckName, questions: []};
-        //     console.log('ADD_DECK', JSON.stringify(x))
-        //     return x;
-        // case ADD_CARD:
-        //     console.log('ADD CARD!!', action);
-        //     console.log(state);
-        //     const newQ = [...state.decks[action.deckName].questions, {
-        //         question: action.question,
-        //         answer: action.answer
-        //     }];
-        //     const newDeck = {...state.decks[action.deckName], questions: newQ};
-        //      decks = {...state.decks};
-        //     decks[action.deckName] = newDeck;
-        //     console.log('newDeck',JSON.stringify(newDeck));
-        //     return {
-        //         ...state,
-        //         decks
-        //     };
+
+        case ADD_CARD:
+            return {
+                ...state,
+                [action.deck.title]: action.deck
+            }
 
         case RECEIVE_DECK :
             console.log('RECEIVE_DECK');
-             decks = {...state.decks};
-            decks[action.deck.title] = action.deck;
-            console.log('decks will be', JSON.stringify(decks))
-            return {
-                ...state,
-                decks
-            };
+            console.log('action.deck', JSON.stringify(action.deck))
+            console.log('action.deck.title', action.deck.title);
+            const newState =
+                {
+                    ...state,
+                    [action.deck.title]: action.deck
+                };
+            return newState;
+
+        case SERVICE_ERROR:
+            console.log('SERVICE_ERROR', JSON.stringify(action));
+            return state;
 
         case RECEIVE_DECKS :
-            console.log('RECEIVE_DECKS')
-            return {
-                ...state,
-                decks: {...action.decks},
-            };
+            const newState2 = action.decks;
+            return newState2;
 
         default :
             return state
     }
+};
+
+const allIds = (state = [], action) => {
+
+    switch (action.type) {
+
+    }
 }
+
+const decks = byId; // Could be extended using combineReducers
 
 export default decks

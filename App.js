@@ -7,8 +7,10 @@ import Quiz from './components/Quiz'
 import NewDeck from "./components/NewDeck";
 import AddCard from "./components/AddCard";
 import {Provider} from 'react-redux'
-import {receiveDecks} from './actions'
+import {addCardToDeck, getDecks, receiveDecks} from './actions'
 import configureStore from './store/index'
+import {addDeck} from "./actions";
+import {MaterialCommunityIcons, Ionicons} from "@expo/vector-icons";
 
 // Create a new Redux store
 const store = configureStore();
@@ -39,13 +41,15 @@ const TabNav = TabNavigator(
         DeckUse: {
             screen: DeckUseStack,
             navigationOptions: {
-                tabBarLabel: 'Decks'
+                tabBarLabel: 'Decks',
+                tabBarIcon: ({tintColor}) => <MaterialCommunityIcons name='cards' size={26} style={{color: tintColor}}/>
             }
         },
         DeckAmend: {
             screen: DeckAmendStack,
             navigationOptions: {
-                tabBarLabel: 'New Deck'
+                tabBarLabel: 'New Deck',
+                tabBarIcon: ({tintColor}) => <Ionicons name='ios-add-circle' size={26} style={{color: tintColor}}/>
             }
         },
     },
@@ -59,32 +63,37 @@ class App extends React.Component {
     componentDidMount() {
 
         // TODO : Load from AsyncStorage
-        const decks = {
-            React: {
-                title: 'React',
-                questions: [
-                    {
-                        question: 'What is React?',
-                        answer: 'A library for managing user interfaces'
-                    },
-                    {
-                        question: 'Where do you make Ajax requests in React?',
-                        answer: 'The componentDidMount lifecycle event'
-                    }
-                ]
-            },
-            JavaScript: {
-                title: 'JavaScript',
-                questions: [
-                    {
-                        question: 'What is a closure?',
-                        answer: 'The combination of a function and the lexical environment within which that function was declared.'
-                    }
-                ]
-            }
-        };
 
-        store.dispatch(receiveDecks(decks))
+
+        // store.dispatch(receiveDecks(decks));
+        // console.log('Getting all decks')
+        store.dispatch(getDecks());
+
+        // store.dispatch(addDeck('React')).then(
+        //     [
+        //         {
+        //             question: 'What is React?',
+        //             answer: 'A library for managing user interfaces'
+        //         },
+        //         {
+        //             question: 'Where do you make Ajax requests in React?',
+        //             answer: 'The componentDidMount lifecycle event'
+        //         }
+        //     ].map(
+        //         (card) => store.dispatch(addCardToDeck('React', card))
+        //     ));
+        //
+        // store.dispatch(addDeck('JavaScript')).then(
+        //     [
+        //         {
+        //             question: 'What is a closure?',
+        //             answer: 'The combination of a function and the lexical environment within which that function was declared.'
+        //         }
+        //     ].map(
+        //         (card) => store.dispatch(addCardToDeck('JavaScript', card))
+        //     ));
+
+
     }
 
 
