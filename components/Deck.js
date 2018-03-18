@@ -1,58 +1,41 @@
 import React from 'react'
 import {Text, View, TouchableOpacity, StyleSheet} from 'react-native'
-import {connect} from "react-redux";
-import {addCard} from "../actions";
+import {connect} from "react-redux"
+import styles from '../utils/styles'
 
 class Deck extends React.Component {
 
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             deckName: props.navigation.state.params.selectedDeck
         }
     }
 
     static navigationOptions = ({navigation}) => {
-        const {selectedDeck} = navigation.state.params;
         return {
-            /* Title for this Navigated screen */
-            title: `${selectedDeck} Deck`,
+            title: `${navigation.state.params.selectedDeck} Deck`
         }
     };
 
+
     render() {
         const {deckName} = this.state;
-        const deck = this.props.decks[deckName];
+        const deck = this.props.decks.byId[deckName];
         const {navigate} = this.props.navigation;
         return (
             <View style={styles.container}>
-                <Text>{deck && deck.questions.length} cards</Text>
-                <TouchableOpacity onPress={() => navigate('Quiz', {deckName, deck})} style={styles.button}>
+                <Text>{deck.numCards} card{deck.numCards === 1 ? '' : 's'}</Text>
+                <TouchableOpacity onPress={() => navigate('Quiz', {deckName})} style={styles.button} disabled={deck.numCards === 0}>
                     <Text>Start a Quiz</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigate('AddCard', {deckName})} style={styles.button}>
+                <TouchableOpacity onPress={() => navigate('AddCard', {selectedDeck: deckName})} style={styles.button}>
                     <Text>Create New Question</Text>
                 </TouchableOpacity>
             </View>
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-    button: {
-        alignItems: 'center',
-        backgroundColor: '#DDDDDD',
-        margin: 20,
-        padding: 10,
-        width: 200,
-    }
-});
 
 
 mapStateToProps = ({decks}) => ({decks});

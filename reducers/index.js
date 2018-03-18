@@ -1,29 +1,80 @@
-import {RECEIVE_DECKS, RECEIVE_DECK, SERVICE_ERROR} from '../actions'
+import {RECEIVE_DECKS, ADD_DECK, ADD_CARD, LOAD_PERSISTED_STATE} from '../actions'
+import {combineReducers} from 'redux'
 
-const byId = (state = {}, action) => {
-    let decks = {};
+
+const card = (state, action) => {
     switch (action.type) {
+        case ADD_CARD:
+            return {
+                question: action.question,
+                answer: action.answer
+            };
+        default:
+            return state
+    }
+};
 
+
+const cards = (state, action) => {
+    switch (action.type) {
+        case ADD_CARD:
+            return [
+                ...state,
+                card(state, action),
+            ];
+        default:
+            return state
+    }
+};
+
+/**
+ * A single deck. Cards are stored in an object
+ *
+ * @param state
+ * @param action
+ * @returns {*}
+ */
+const deck = (state, action) => {
+    switch (action.type) {
         case ADD_CARD:
             return {
                 ...state,
-                [action.deck.title]: action.deck
-            }
+                cards: cards(state.cards, action),
+                numCards: state.numCards + 1,
+            };
+        case ADD_DECK :
+            return {
+                ...state,
+                deckTitle: action.deckTitle,
+                cards: [],
+                numCards: 0,
+            };
+        default:
+            return state
+    }
+};
 
-        case RECEIVE_DECK :
-            console.log('RECEIVE_DECK');
-            console.log('action.deck', JSON.stringify(action.deck))
-            console.log('action.deck.title', action.deck.title);
-            const newState =
-                {
-                    ...state,
-                    [action.deck.title]: action.deck
-                };
-            return newState;
 
-        case SERVICE_ERROR:
-            console.log('SERVICE_ERROR', JSON.stringify(action));
-            return state;
+/**
+ * All decks by ID
+ *
+ * @param state
+ * @param action
+ * @returns {*}
+ */
+const byId = (state = {}, action) => {
+    let decks = {};
+
+    switch (action.type) {
+        case LOAD_PERSISTED_STATE:
+            return action.state.decks.byId;
+
+        case ADD_CARD:
+        case ADD_DECK :
+            return {
+                ...state,
+                [action.deckTitle]: deck(state[action.deckTitle], action)
+            };
 
         case RECEIVE_DECKS :
             const newState2 = action.decks;
@@ -34,13 +85,32 @@ const byId = (state = {}, action) => {
     }
 };
 
+/**
+ * Keep an array of all deck ids
+ *
+ * @param state
+ * @param action
+ * @returns {*}
+ */
 const allIds = (state = [], action) => {
-
     switch (action.type) {
-
+        case LOAD_PERSISTED_STATE:
+            return action.state.decks.allIds;
+        case ADD_DECK:
+            return [...state, action.deckTitle];
+        default:
+            return state;
     }
-}
+};
 
-const decks = byId; // Could be extended using combineReducers
+const decks = combineReducers({byId, allIds});
 
 export default decks
+
+/**
+ * Return an array of all decks
+ *
+ * @param state
+ * @returns {Object|*|{}|Uint8Array|any[]|Int32Array}
+ */
+export const getAllDecks = (state) => state.allIds.map(id => state.byId[id]);

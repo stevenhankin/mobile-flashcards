@@ -1,14 +1,9 @@
 import React from 'react'
 import {Text, View, TouchableOpacity, StyleSheet} from 'react-native'
+import {connect} from "react-redux";
+import styles from '../utils/styles'
 
 class Quiz extends React.Component {
-    static navigationOptions = ({navigation}) => {
-        const {deckName} = navigation.state.params;
-        return {
-            /* Title for this Navigated screen */
-            title: `${deckName} Quiz`,
-        }
-    };
 
     constructor(props) {
         super(props);
@@ -18,6 +13,12 @@ class Quiz extends React.Component {
             showAnswer: false,
         }
     }
+
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: `${navigation.state.params.deckName} Quiz`
+        }
+    };
 
     correct = () => {
         this.setState({
@@ -34,61 +35,87 @@ class Quiz extends React.Component {
         })
     };
 
+
+    /**
+     * Helper method - display during a deck quiz
+     *
+     * @param question
+     * @param answer
+     * @param cardsLeft
+     * @returns {*}
+     */
+    quizQuestion(question, answer, cardsLeft) {
+        return <View>
+            <Text>Question: {question}</Text>
+            {this.state.showAnswer ?
+                <Text>Answer: {answer}</Text>
+                :
+                <TouchableOpacity onPress={() => {
+                    this.setState({showAnswer: true})
+                }} style={styles.button}>
+                    <Text>Show Answer</Text>
+                </TouchableOpacity>
+            }
+            <Text>({cardsLeft} cards remaining..)</Text>
+            <TouchableOpacity onPress={this.correct} style={styles.button}>
+                <Text>Correct</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.incorrect} style={styles.button}>
+                <Text>Incorrect</Text>
+            </TouchableOpacity>
+        </View>;
+    }
+
+    /**
+     * Helper method - display for last view at end of quiz
+     *
+     * @param deck
+     * @param navigate
+     * @param deckName
+     * @returns {*}
+     */
+    quizEnd(deck, navigate, deckName) {
+        return <View style={styles.messageView}>
+            <Text style={styles.messageText}>{Math.round(100 * this.state.correct / deck.numCards)}%
+                correct</Text>
+            <Text>You have completed this deck</Text>
+            <TouchableOpacity style={styles.button}
+                              onPress={() => navigate('Quiz', {deckName})
+                              }>
+                <Text>Restart Quiz</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button}
+                              onPress={() => navigate('Deck', {selectedDeck: deckName})
+                              }>
+                <Text>Back to Deck</Text>
+            </TouchableOpacity>
+        </View>;
+    }
+
     render() {
+        const {navigate} = this.props.navigation;
         const {params} = this.props.navigation.state;
-        // const {deckName} = params;
-        const {deck} = params;
-        const {questions} = deck;
-        const cardsLeft = questions.length - this.state.questionIdx;
-        const {question, answer} = cardsLeft && questions[this.state.questionIdx];
+        const {deckName} = params;
+        const deck = this.props.decks.byId[deckName];
+        const {cards} = deck;
+        const cardsLeft = deck.numCards - this.state.questionIdx;
+        const {question, answer} = cardsLeft && cards[this.state.questionIdx];
         return (
             <View style={styles.container}>
                 {cardsLeft ?
-                    <View>
-                        <Text>Question</Text>
-                        <Text>{question}</Text>
-                        {this.state.showAnswer ?
-                            <Text>{answer}</Text>
-                            :
-                            <TouchableOpacity onPress={() => {
-                                this.setState({showAnswer: true})
-                            }} style={styles.button}>
-                                <Text>Show Answer</Text>
-                            </TouchableOpacity>
-                        }
-                        <TouchableOpacity onPress={this.correct} style={styles.button}>
-                            <Text>Correct</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={this.incorrect} style={styles.button}>
-                            <Text>Incorrect</Text>
-                        </TouchableOpacity>
-                        <Text>{cardsLeft} Cards Left</Text>
-                    </View>
-                    : <View>
-                        <Text>{Math.round(100 * this.state.correct / questions.length)}% correct</Text>
-                    </View>
+                    this.quizQuestion(question, answer, cardsLeft)
+                    :
+                    this.quizEnd(deck, navigate, deckName)
+
                 }
             </View>
         )
     }
+
 }
 
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-    button: {
-        alignItems: 'center',
-        backgroundColor: '#DDDDDD',
-        margin: 20,
-        padding: 10,
-        width: 200,
-    }
-});
+mapStateToProps = ({decks}) => ({decks});
 
+export default connect(mapStateToProps)(Quiz)
 
-export default Quiz

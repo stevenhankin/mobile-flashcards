@@ -2,7 +2,7 @@ import React from 'react'
 import {Text, TextInput, View, TouchableOpacity, StyleSheet} from 'react-native'
 import {connect} from "react-redux";
 import {addDeck} from "../actions";
-// import {addDeck} from '../services'
+import styles from '../utils/styles'
 
 class NewDeck extends React.Component {
     constructor(props) {
@@ -21,16 +21,11 @@ class NewDeck extends React.Component {
 
     addDeckAndNavigate = () => {
         const deckName=this.state.text;
-        console.log('add deck',deckName);
         this.props.addDeck(deckName);
-        // addDeck(deckName)
-        //     .then(this.props.addDeck(deckName)
-        //     )
+        this.props.navigation.navigate('Deck', {selectedDeck: deckName})
     };
 
     render() {
-        const {navigate} = this.props.navigation;
-        const {params} = this.props.navigation.state;
         return (
             <View style={styles.container}>
                 <Text>What is the title of your new deck?</Text>
@@ -49,24 +44,5 @@ class NewDeck extends React.Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-    button: {
-        alignItems: 'center',
-        backgroundColor: '#DDDDDD',
-        margin: 20,
-        padding: 10,
-        width: 200,
-    }
-});
-
-
-// mapStateToProps = ({decks}) => ({decks});
 
 export default connect(null, {addDeck})(NewDeck)

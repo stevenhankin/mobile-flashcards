@@ -1,7 +1,8 @@
 import React from 'react'
 import {Text, View, TextInput, TouchableOpacity, StyleSheet} from 'react-native'
 import {connect} from "react-redux";
-import {addCardToDeck} from '../actions'
+import {addCard} from '../actions'
+import styles from '../utils/styles'
 
 class AddCard extends React.Component {
 
@@ -10,21 +11,18 @@ class AddCard extends React.Component {
         this.state = {
             question: '',
             answer: '',
-            deckName: props.navigation.state.params.selectedDeck,
         }
     }
 
     static navigationOptions = ({navigation}) => {
-        console.log('params',JSON.stringify(navigation.state.params))
-        const {selectedDeck} = navigation.state.params;
         return {
-            /* Title for this Navigated screen */
-            title: `Add Card to ${selectedDeck}`,
+            title: `Add Card to ${navigation.state.params.selectedDeck}`
         }
     };
 
 
     render() {
+        const deckName = this.props.navigation.state.params.selectedDeck;
         return (
             <View style={styles.container}>
                 <Text>Question</Text>
@@ -44,7 +42,7 @@ class AddCard extends React.Component {
                     }}
                     value={this.state.answer}/>
                 <TouchableOpacity
-                    onPress={()=>this.props.addCardToDeck(this.state.deckName, {question: this.state.question, answer: this.state.answer})}
+                    onPress={() => this.props.addCard(deckName, this.state.question, this.state.answer)}
                     style={styles.button}>
                     <Text>Add Card</Text>
                 </TouchableOpacity>
@@ -53,26 +51,5 @@ class AddCard extends React.Component {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-    button: {
-        alignItems: 'center',
-        backgroundColor: '#DDDDDD',
-        margin: 20,
-        padding: 10,
-        width: 200,
-    },
-    input: {
-        height: 40, width: 200, borderColor: 'gray', borderWidth: 1
-    }
-});
 
-
-// mapStateToProps = ({decks}) => ({decks});
-
-export default connect(null, {addCardToDeck})(AddCard)
+export default connect(null, {addCard})(AddCard)
