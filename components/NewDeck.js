@@ -20,7 +20,7 @@ class NewDeck extends React.Component {
     };
 
     addDeckAndNavigate = () => {
-        const deckName=this.state.text;
+        const deckName = this.state.text;
         this.props.addDeck(deckName);
         this.props.navigation.navigate('Deck', {selectedDeck: deckName})
     };
@@ -37,7 +37,8 @@ class NewDeck extends React.Component {
                     }}
                     value={this.state.text}
                 />
-                <TouchableOpacity style={styles.button} onPress={this.addDeckAndNavigate}>
+                <TouchableOpacity style={styles.button} onPress={this.addDeckAndNavigate}
+                                  disabled={this.state.text.trim().length === 0}>
                     <Text>Create Deck</Text>
                 </TouchableOpacity>
             </View>
