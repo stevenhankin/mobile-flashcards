@@ -17,7 +17,7 @@ class Quiz extends React.Component {
 
     static navigationOptions = ({navigation}) => {
         return {
-            title: `${navigation.state.params.deckName} Quiz`
+            title: `${navigation.state.params.deckTitle} Quiz`
         }
     };
 
@@ -76,7 +76,7 @@ class Quiz extends React.Component {
      * @param deckName
      * @returns {*}
      */
-    quizEnd(deck, navigation, deckName) {
+    quizEnd(deck, navigation) {
 
         return <View style={styles.messageView}>
             <Text style={styles.messageText}>{Math.round(100 * this.state.correct / deck.numCards)}%
@@ -101,8 +101,8 @@ class Quiz extends React.Component {
     render() {
         const {navigation} = this.props;
         const {params} = navigation.state;
-        const {deckName} = params;
-        const deck = this.props.decks.byId[deckName];
+        const {deckId} = params;
+        const deck = this.props.decks.byId[deckId];
         const {cards} = deck;
         const cardsLeft = deck.numCards - this.state.questionIdx;
         const {question, answer} = cardsLeft && cards[this.state.questionIdx];
@@ -111,7 +111,7 @@ class Quiz extends React.Component {
                 {cardsLeft ?
                     this.quizQuestion(question, answer, cardsLeft)
                     :
-                    this.quizEnd(deck, navigation, deckName)
+                    this.quizEnd(deck, navigation)
 
                 }
             </View>

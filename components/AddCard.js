@@ -15,14 +15,15 @@ class AddCard extends React.Component {
     }
 
     static navigationOptions = ({navigation}) => {
+        const {deckTitle} = navigation.state.params;
         return {
-            title: `Add Card to ${navigation.state.params.selectedDeck}`
+            title: `Add Card to ${deckTitle}`
         }
     };
 
 
     render() {
-        const deckName = this.props.navigation.state.params.selectedDeck;
+        const {deckId, deckTitle} = this.props.navigation.state.params;
         return (
             <View style={styles.container}>
                 <Text style={styles.messageText}>Question</Text>
@@ -42,7 +43,7 @@ class AddCard extends React.Component {
                     }}
                     value={this.state.answer}/>
                 <TouchableOpacity
-                    onPress={() => this.props.addCard(deckName, this.state.question, this.state.answer)}
+                    onPress={() => this.props.addCard(deckId, deckTitle, this.state.question, this.state.answer)}
                     style={styles.button}>
                     <Text>Add Card</Text>
                 </TouchableOpacity>

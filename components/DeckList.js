@@ -39,12 +39,12 @@ class DeckList extends React.Component {
         const faders = getAllDecks(newProps.decks)
             .map((deck) => (
                 {
-                    deckId: deck.deckTitle,
+                    deckId: deck.deckId,
                     opacityAnim: new Animated.Value(1)
                 })
             )
-            .reduce((acc, val) => {
-                acc[val.deckId] = val;
+            .reduce((acc, deck) => {
+                acc[deck.deckId] = deck;
                 return acc;
             }, {});
         this.setState({faders})
@@ -57,26 +57,28 @@ class DeckList extends React.Component {
      * next appropriate screen (either to the deck view
      * or Add Card screen if it's a new deck)
      *
-     * @param selectedDeck
+     * @param selectedDeckId
      * @param numCards
      */
-    fadeDecksAndNavigate = (selectedDeck, numCards) => {
+    fadeDecksAndNavigate = (selectedDeckId, numCards) => {
         const {navigate} = this.props.navigation;
+        const selectedDeckName = this.props.decks.byId[selectedDeckId].deckTitle;
         /*
         Aim is to transition once the fading effect of the other cards has almost completed
          */
         setTimeout(
             () =>
                 numCards > 0 ?
-                    navigate('Deck', {selectedDeck})
-                    : navigate('AddCard', {selectedDeck}),
+                    navigate('Deck', {deckId: selectedDeckId, deckTitle: selectedDeckName})
+                    : navigate('AddCard', {deckId: selectedDeckId, deckTitle: selectedDeckName}),
             400);
         getAllDecks(this.props.decks)
-            .map((deck) => deck.deckTitle)
-            .filter(deckTitle => deckTitle !== selectedDeck) // Only want to fade-out the unselected decks
+            .map((deck) => deck.deckId)
+            .filter(deckId => deckId !== selectedDeckId) // Only want to fade-out the unselected decks
             .map(
-                (deckTitle) => {
-                    const deckFader = this.state.faders[deckTitle];
+                (deckId) => {
+                    const deckFader = this.state.faders[deckId];
+                    console.log('deckFader',deckFader)
                     Animated.timing(             // Animate
                         deckFader.opacityAnim,
                         {
@@ -118,12 +120,12 @@ class DeckList extends React.Component {
                     :
                     decks.map(
                         (deck) =>
-                            <Animated.View key={deck.deckTitle} style={{opacity: this.getOpacityAnim(deck.deckTitle)}}>
+                            <Animated.View key={deck.deckId} style={{opacity: this.getOpacityAnim(deck.deckId)}}>
                                 <TouchableOpacity style={styles.button}
-                                                  onPress={() => this.fadeDecksAndNavigate(deck.deckTitle, deck.numCards)
+                                                  onPress={() => this.fadeDecksAndNavigate(deck.deckId, deck.numCards)
                                                   }>
                                     <Text style={styles.emphasis}>{deck.deckTitle}</Text>
-                                    <Text>{deck.numCards} card{deck.numCards===1?'':'s'}</Text>
+                                    <Text>{deck.numCards} card{deck.numCards === 1 ? '' : 's'}</Text>
                                 </TouchableOpacity>
                             </Animated.View>
                     )}

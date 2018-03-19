@@ -28,7 +28,7 @@ const cards = (state, action) => {
 };
 
 /**
- * A single deck. Cards are stored in an object
+ * A single deck
  *
  * @param state
  * @param action
@@ -45,6 +45,7 @@ const deck = (state, action) => {
         case ADD_DECK :
             return {
                 ...state,
+                deckId: action.deckId,
                 deckTitle: action.deckTitle,
                 cards: [],
                 numCards: 0,
@@ -70,15 +71,14 @@ const byId = (state = {}, action) => {
             return action.state.decks.byId;
 
         case ADD_CARD:
-        case ADD_DECK :
+        case ADD_DECK:
             return {
                 ...state,
-                [action.deckTitle]: deck(state[action.deckTitle], action)
+                [action.deckId]: deck(state[action.deckId], action)
             };
 
         case RECEIVE_DECKS :
-            const newState2 = action.decks;
-            return newState2;
+            return action.decks;
 
         default :
             return state
@@ -97,7 +97,7 @@ const allIds = (state = [], action) => {
         case LOAD_PERSISTED_STATE:
             return action.state.decks.allIds;
         case ADD_DECK:
-            return [...state, action.deckTitle];
+            return [...state, action.deckId];
         default:
             return state;
     }

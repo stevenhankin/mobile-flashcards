@@ -9,16 +9,18 @@ export const loadPersistedState = (state) => ({
     state,
 });
 
-export const addCard = (deckTitle, question, answer) => ({
+export const addCard = (deckId,deckTitle, question, answer) => ({
     type: ADD_CARD,
+    deckId,
     deckTitle,
     question,
     answer,
 });
 
 
-export const addDeck = (deckTitle) => ({
+export const addDeck = (deckId,deckTitle) => ({
     type: ADD_DECK,
+    deckId,
     deckTitle,
 });
 

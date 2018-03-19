@@ -3,6 +3,7 @@ import {Text, TextInput, View, TouchableOpacity, StyleSheet} from 'react-native'
 import {connect} from "react-redux";
 import {addDeck} from "../actions";
 import styles from '../utils/styles'
+import uuidv4 from 'uuid/v4'
 
 class NewDeck extends React.Component {
     constructor(props) {
@@ -20,9 +21,10 @@ class NewDeck extends React.Component {
     };
 
     addDeckAndNavigate = () => {
+        const deckId =  uuidv4();
         const deckName = this.state.text;
-        this.props.addDeck(deckName);
-        this.props.navigation.navigate('Deck', {selectedDeck: deckName})
+        this.props.addDeck(deckId, deckName);
+        this.props.navigation.navigate('Deck', {deckId,deckTitle: deckName})
     };
 
     render() {

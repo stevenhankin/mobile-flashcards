@@ -8,28 +8,32 @@ class Deck extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            deckName: props.navigation.state.params.selectedDeck
+            deckId: props.navigation.state.params.deckId
         }
     }
 
     static navigationOptions = ({navigation}) => {
+        const {deckTitle} = navigation.state.params;
         return {
-            title: `${navigation.state.params.selectedDeck} Deck`
+            title: `${deckTitle} Deck`
         }
     };
 
 
     render() {
-        const {deckName} = this.state;
-        const deck = this.props.decks.byId[deckName];
+        const {deckId} = this.state;
+        console.log('byId',this.props.decks.byId)
+        const deck = this.props.decks.byId[deckId];
+        console.log('deck contains',deck)
+        const {deckTitle} = deck;
         const {navigate} = this.props.navigation;
         return (
             <View style={styles.container}>
                 <Text>{deck.numCards} card{deck.numCards === 1 ? '' : 's'}</Text>
-                <TouchableOpacity onPress={() => navigate('Quiz', {deckName})} style={styles.button} disabled={deck.numCards === 0}>
+                <TouchableOpacity onPress={() => navigate('Quiz', {deckId, deckTitle})} style={styles.button} disabled={deck.numCards === 0}>
                     <Text>Start a Quiz</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigate('AddCard', {selectedDeck: deckName})} style={styles.button}>
+                <TouchableOpacity onPress={() => navigate('AddCard', {deckId, deckTitle})} style={styles.button}>
                     <Text>Create New Question</Text>
                 </TouchableOpacity>
             </View>
