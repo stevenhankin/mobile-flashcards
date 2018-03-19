@@ -13,8 +13,6 @@ const rootReducer = combineReducers({decks: deckReducer});
 
 const store = createStore(
     rootReducer,
-    // initialState,
-    // applyMiddleware(thunk),
 );
 
 
