@@ -3,6 +3,7 @@ import {Text, View, TouchableOpacity, StyleSheet} from 'react-native'
 import {connect} from "react-redux";
 import styles from '../utils/styles'
 
+
 class Quiz extends React.Component {
 
     constructor(props) {
@@ -45,6 +46,7 @@ class Quiz extends React.Component {
      * @returns {*}
      */
     quizQuestion(question, answer, cardsLeft) {
+
         return <View>
             <Text>Question: {question}</Text>
             {this.state.showAnswer ?
@@ -70,31 +72,35 @@ class Quiz extends React.Component {
      * Helper method - display for last view at end of quiz
      *
      * @param deck
-     * @param navigate
+     * @param navigation
      * @param deckName
      * @returns {*}
      */
-    quizEnd(deck, navigate, deckName) {
+    quizEnd(deck, navigation, deckName) {
+
         return <View style={styles.messageView}>
             <Text style={styles.messageText}>{Math.round(100 * this.state.correct / deck.numCards)}%
                 correct</Text>
             <Text>You have completed this deck</Text>
             <TouchableOpacity style={styles.button}
-                              onPress={() => navigate('Quiz', {deckName})
+                              onPress={() =>
+                                  this.setState({
+                                      correct: 0,
+                                      questionIdx: 0,
+                                      showAnswer: false
+                                  })
                               }>
                 <Text>Restart Quiz</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}
-                              onPress={() => navigate('Deck', {selectedDeck: deckName})
-                              }>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
                 <Text>Back to Deck</Text>
             </TouchableOpacity>
         </View>;
     }
 
     render() {
-        const {navigate} = this.props.navigation;
-        const {params} = this.props.navigation.state;
+        const {navigation} = this.props;
+        const {params} = navigation.state;
         const {deckName} = params;
         const deck = this.props.decks.byId[deckName];
         const {cards} = deck;
@@ -105,7 +111,7 @@ class Quiz extends React.Component {
                 {cardsLeft ?
                     this.quizQuestion(question, answer, cardsLeft)
                     :
-                    this.quizEnd(deck, navigate, deckName)
+                    this.quizEnd(deck, navigation, deckName)
 
                 }
             </View>

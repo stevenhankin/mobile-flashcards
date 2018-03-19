@@ -25,7 +25,7 @@ class AddCard extends React.Component {
         const deckName = this.props.navigation.state.params.selectedDeck;
         return (
             <View style={styles.container}>
-                <Text>Question</Text>
+                <Text style={styles.messageText}>Question</Text>
                 <TextInput
                     placeholder='Question'
                     style={styles.input}
@@ -33,7 +33,7 @@ class AddCard extends React.Component {
                         this.setState({question})
                     }}
                     value={this.state.question}/>
-                <Text>Answer</Text>
+                <Text style={styles.messageText}>Answer</Text>
                 <TextInput
                     placeholder='Answer'
                     style={styles.input}

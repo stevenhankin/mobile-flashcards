@@ -33,7 +33,7 @@ class DeckList extends React.Component {
      * animation value per deck, so that multiple
      * decks can be faded simultaneously
      *
-     * @param props
+     * @param newProps
      */
     setupFaders = (newProps) => {
         const faders = getAllDecks(newProps.decks)
