@@ -5,7 +5,7 @@ import * as fromActions from "./actions";
 import {combineReducers, createStore} from "redux";
 import deckReducer from "./reducers";
 import {loadState, saveState} from "./storage";
-import setLocalNotification from "./utils/notifier"
+import {setLocalNotification} from "./utils/notifier"
 import {TabNav} from './utils/navigation'
 
 
@@ -40,6 +40,11 @@ loadState()
 
 class App extends React.Component {
 
+    /**
+     * When app first loads,
+     * user will be prompted for permission
+     * to ping user with a notification
+     */
     componentDidMount() {
         setLocalNotification();
     }

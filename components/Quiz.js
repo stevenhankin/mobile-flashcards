@@ -2,6 +2,7 @@ import React from 'react'
 import {Text, View, TouchableOpacity, StyleSheet} from 'react-native'
 import {connect} from "react-redux";
 import styles from '../utils/styles'
+import {clearLocalNotifications, setLocalNotification} from "../utils/notifier";
 
 
 class Quiz extends React.Component {
@@ -77,6 +78,13 @@ class Quiz extends React.Component {
      * @returns {*}
      */
     quizEnd(deck, navigation) {
+
+        /*
+        Since a quiz has been completed, can reset the reminder
+        and scheduler a new one (for 24 hours time)
+         */
+        clearLocalNotifications()
+            .then(setLocalNotification());
 
         return <View style={styles.messageView}>
             <Text style={styles.messageText}>{Math.round(100 * this.state.correct / deck.numCards)}%

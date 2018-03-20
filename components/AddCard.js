@@ -1,5 +1,5 @@
 import React from 'react'
-import {Text, View, TextInput, TouchableOpacity, StyleSheet} from 'react-native'
+import {Text, View, TextInput, TouchableOpacity, Keyboard} from 'react-native'
 import {connect} from "react-redux";
 import {addCard} from '../actions'
 import styles from '../utils/styles'
@@ -43,8 +43,11 @@ class AddCard extends React.Component {
                     }}
                     value={this.state.answer}/>
                 <TouchableOpacity
-                    onPress={() => this.props.addCard(deckId, deckTitle, this.state.question, this.state.answer)}
-                    style={styles.button}>
+                    onPress={() => this.props.addCard(deckId, deckTitle, this.state.question, this.state.answer)
+                        && this.props.navigation.goBack()
+                        && Keyboard.dismiss()}
+                    style={styles.button}
+                    disabled={this.state.question.trim().length === 0 || this.state.answer.trim().length === 0}>
                     <Text>Add Card</Text>
                 </TouchableOpacity>
             </View>
